@@ -4,10 +4,14 @@ import { Html5QrcodeScanner, Html5Qrcode } from "html5-qrcode";
 import { motion } from "framer-motion";
 import bg from "../assets/bg2.jpeg";
 
-const Level1 = () => {
+const Level2 = () => {
   const navigate = useNavigate();
+
+  // Extract stored text from Level 1
+  const storedTextLevel1 = localStorage.getItem("scannedText") || "";
+
   const [scannedText, setScannedText] = useState(
-    localStorage.getItem("scannedText") || ""
+    localStorage.getItem("scannedTextLevel2") || ""
   );
   const [showScanner, setShowScanner] = useState(false);
 
@@ -22,7 +26,7 @@ const Level1 = () => {
       scanner.render(
         (decodedText) => {
           setScannedText(decodedText);
-          localStorage.setItem("scannedText", decodedText);
+          localStorage.setItem("scannedTextLevel2", decodedText);
           scanner.clear();
           setShowScanner(false);
         },
@@ -43,11 +47,11 @@ const Level1 = () => {
     try {
       const decodedText = await html5QrCode.scanFile(file, false);
       setScannedText(decodedText);
-      localStorage.setItem("scannedText", decodedText);
+      localStorage.setItem("scannedTextLevel2", decodedText);
     } catch (err) {
       alert("No QR code found in the image. Try another one.");
     } finally {
-      html5QrCode.clear(); // Ensure cleanup
+      html5QrCode.clear(); // Cleanup
     }
   };
 
@@ -63,7 +67,7 @@ const Level1 = () => {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 1 }}
       >
-        LEVEL 1 🔍
+        LEVEL 2 🔍
       </motion.h1>
 
       {/* Riddle Card */}
@@ -73,7 +77,7 @@ const Level1 = () => {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1 }}
       >
-        <p>“The more you take, the more you leave behind. What am I?”</p>
+        <p>“I have cities but no houses, forests but no trees, and rivers but no water. What am I?”</p>
       </motion.div>
 
       {/* Buttons */}
@@ -102,7 +106,15 @@ const Level1 = () => {
           className="w-full bg-gray-700 text-white py-2 rounded-lg cursor-pointer"
         />
 
-        {/* Uneditable Text Input */}
+        {/* Obtained Text from Level 1 */}
+        <input
+          type="text"
+          value={storedTextLevel1}
+          className="w-full p-2 text-center bg-gray-300 text-gray-700 rounded-lg border border-gray-500"
+          readOnly
+        />
+
+        {/* Uneditable Text Input (Current Level) */}
         <input
           type="text"
           value={scannedText}
@@ -112,7 +124,7 @@ const Level1 = () => {
 
         {/* Move to Next Level Button */}
         <button
-          onClick={() => navigate("/level2")}
+          onClick={() => navigate("/level3")}
           className={`w-full py-2 rounded-lg transition-all ${
             scannedText
               ? "bg-green-500 text-white hover:bg-green-600"
@@ -127,4 +139,4 @@ const Level1 = () => {
   );
 };
 
-export default Level1;
+export default Level2;
